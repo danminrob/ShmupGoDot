@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://dv76p31f2wixc"]
+
+[ext_resource type="Script" path="res://enemies/enemy_generator.gd" id="1_tj01o"]
+[ext_resource type="Script" path="res://components/spawner_component.gd" id="2_ur3gy"]
+
+[node name="EnemyGenerator" type="Node2D"]
+script = ExtResource("1_tj01o")
+
+[node name="SpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("2_ur3gy")
+
+[node name="GreenEnemySpawnerTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+autostart = true

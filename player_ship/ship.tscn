@@ -1,0 +1,177 @@
+[gd_scene load_steps=27 format=3 uid="uid://78bd5tnc1osm"]
+
+[ext_resource type="Script" path="res://player_ship/ship.gd" id="1_8aybm"]
+[ext_resource type="Texture2D" uid="uid://etb75r03nofv" path="res://assets/ship.png" id="1_xaq8y"]
+[ext_resource type="Script" path="res://components/move_component.gd" id="2_biwsy"]
+[ext_resource type="Script" path="res://components/stats_component.gd" id="2_nwaux"]
+[ext_resource type="Script" path="res://components/move_input_component.gd" id="3_h44si"]
+[ext_resource type="Resource" uid="uid://bciism2nllywf" path="res://player_ship/ship_move_stats.tres" id="4_sky0t"]
+[ext_resource type="Script" path="res://components/position_clamp_component.gd" id="5_3mnva"]
+[ext_resource type="Script" path="res://components/spawner_component.gd" id="7_oj0u8"]
+[ext_resource type="PackedScene" uid="uid://vvh0jap4q4gm" path="res://projectiles/laser.tscn" id="8_1t212"]
+[ext_resource type="Script" path="res://components/scale_component.gd" id="9_8vg5w"]
+[ext_resource type="Texture2D" uid="uid://gcrb8tqc23ko" path="res://assets/ship_flame.png" id="10_qqjb1"]
+[ext_resource type="Script" path="res://components/hurtbox_component.gd" id="11_qhvv6"]
+[ext_resource type="Script" path="res://components/hurt_component.gd" id="13_m8267"]
+[ext_resource type="PackedScene" uid="uid://cgkxoiceh76c" path="res://effects/explosion_effect.tscn" id="14_ylixx"]
+[ext_resource type="Script" path="res://components/destroyed_component.gd" id="15_oobgn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qoo42"]
+atlas = ExtResource("1_xaq8y")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dndft"]
+atlas = ExtResource("1_xaq8y")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2oykt"]
+atlas = ExtResource("1_xaq8y")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_j8uh3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qoo42")
+}],
+"loop": true,
+"name": &"bank_left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dndft")
+}],
+"loop": true,
+"name": &"bank_right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2oykt")
+}],
+"loop": true,
+"name": &"center",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u016j"]
+atlas = ExtResource("10_qqjb1")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_33sml"]
+atlas = ExtResource("10_qqjb1")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5dji7"]
+atlas = ExtResource("10_qqjb1")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_foqpl"]
+atlas = ExtResource("10_qqjb1")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dqyo3"]
+atlas = ExtResource("10_qqjb1")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mvwly"]
+atlas = ExtResource("10_qqjb1")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_36tmx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u016j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_33sml")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5dji7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_foqpl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dqyo3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mvwly")
+}],
+"loop": true,
+"name": &"default",
+"speed": 24.0
+}]
+
+[node name="Ship" type="Node2D"]
+script = ExtResource("1_8aybm")
+
+[node name="StatsComponent" type="Node" parent="."]
+script = ExtResource("2_nwaux")
+
+[node name="ShipAnimation" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_j8uh3")
+animation = &"center"
+autoplay = "center"
+
+[node name="MoveComponent" type="Node" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("2_biwsy")
+actor = NodePath("..")
+
+[node name="MoveInputController" type="Node" parent="." node_paths=PackedStringArray("move_component")]
+script = ExtResource("3_h44si")
+move_component = NodePath("../MoveComponent")
+move_stats = ExtResource("4_sky0t")
+
+[node name="PositionClampComponent" type="Node2D" parent="." node_paths=PackedStringArray("actor")]
+script = ExtResource("5_3mnva")
+actor = NodePath("..")
+
+[node name="LeftCannon" type="Marker2D" parent="."]
+position = Vector2(-5, -4)
+
+[node name="RightCannon" type="Marker2D" parent="."]
+position = Vector2(5, -4)
+
+[node name="SpawnerComponent" type="Node2D" parent="."]
+script = ExtResource("7_oj0u8")
+scene = ExtResource("8_1t212")
+
+[node name="FireRateTimer" type="Timer" parent="."]
+wait_time = 0.2
+
+[node name="ScaleComponent" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("9_8vg5w")
+sprite = NodePath("../ShipAnimation")
+scale_amount = Vector2(1.1, 1.1)
+scale_duration = 0.2
+
+[node name="FlameAnimation" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 15)
+sprite_frames = SubResource("SpriteFrames_36tmx")
+autoplay = "default"
+frame_progress = 0.132437
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+collision_mask = 0
+script = ExtResource("11_qhvv6")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HurtboxComponent"]
+polygon = PackedVector2Array(-8, 0, -8, 0, -8, 0, 0, -8, 8, 0, 8, 0, 0, 8)
+
+[node name="HurtComponent" type="Node" parent="." node_paths=PackedStringArray("stats_component", "hurtbox_component")]
+script = ExtResource("13_m8267")
+stats_component = NodePath("../StatsComponent")
+hurtbox_component = NodePath("../HurtboxComponent")
+
+[node name="Explosion" type="Node2D" parent="."]
+script = ExtResource("7_oj0u8")
+scene = ExtResource("14_ylixx")
+
+[node name="DestroyedComponent" type="Node" parent="." node_paths=PackedStringArray("actor", "stats_component", "destroy_effect_spawner_component")]
+script = ExtResource("15_oobgn")
+actor = NodePath("..")
+stats_component = NodePath("../StatsComponent")
+destroy_effect_spawner_component = NodePath("../Explosion")
